@@ -1,0 +1,216 @@
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Party Management System</h3>
+  </div>
+  <div class="row pt-3"></div>
+  <div class="card-body card-outline card-primary">
+    <div class="row">
+      <div class="col-md-10">
+      </div>
+      <div class="col-md-2">
+        <div class="card-body pad table-responsive">
+          <button class="btn btn-primary" style="float: right;margin-left: 7px;" (click)="addingdata()"> <i
+              class="pi pi-plus"></i>ADD</button>
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="card-body">
+      <p-table #dt [value]="partyData.request.body.formdata" [rows]="10" [paginator]="true"
+        [rowsPerPageOptions]="[10,25,50]" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [globalFilterFields]="[ 'key','value','description','type']" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-between">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" placeholder="Search..." (input)="partyService.filterHandler(dt,$event)" />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>S.No.</th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Operation</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-formData let-i="rowIndex">
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{formData.key }}</td>
+            <td>{{formData.value }}</td>
+            <td>{{formData.description }}</td>
+            <td>{{formData.type }}</td>
+
+
+            <td>
+              <div class="row">
+                <div class="col-md-2">
+                  <button class="btn btn-secondary" style="color:   white;" (click)="editdata(formData)"> <i
+                      class="pi pi-plus"></i>Edit</button>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-2">
+                  <button class="btn btn-danger" style="color: white" (click)="removedata(formData)"> <i
+                      class="pi pi-plus"></i>Delete</button>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-2">
+                  <button class="btn btn-primary" style="color: white" (click)="viwedatdata()"> <i
+                      class="pi pi-eye"></i>View</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+
+    <p-dialog header="ADD" [(visible)]="adding" [style]="{ width: '35vw'}" [draggable]="true" [resizable]="true">
+      <form>
+        <div class="modal-body">
+          <div class="row">
+            <label for="key" class="col-sm-3 control-label">Key</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="key" name="key" id="key"
+                placeholder="Enter key">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <label for="value" class="col-sm-3 control-label">Value</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="value" name="value" id="value"
+                placeholder="Enter Value">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <label for="description" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="description" name="description"
+                id="description" placeholder="Enter Description">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <label for="type" class="col-sm-3 control-label">Type</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="type" name="type" id="type"
+                placeholder="Enter Type">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Close</button>
+          <button type="submit" class="btn btn-primary" (click)="adddata()">ADD</button>
+        </div>
+      </form>
+    </p-dialog>
+
+    <p-dialog header="Edit" [(visible)]="editingdata" [style]="{ width: '35vw'}" [draggable]="true" [resizable]="true">
+      <form>
+        <div class="modal-body">
+          <div class="row">
+            <label for="key" class="col-sm-3 control-label">Key</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="editedProduct.key" name="key" id="key"
+                placeholder="Enter key">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <label for="value" class="col-sm-3 control-label">Value</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="editedProduct.value" name="value" id="value"
+                placeholder="Enter Value">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <label for="description" class="col-sm-3 control-label">Description</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="editedProduct.description"
+                name="description" id="description" placeholder="Enter Description">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <label for="type" class="col-sm-3 control-label">Type</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="editedProduct.type" name="type" id="type"
+                placeholder="Enter Type">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Close</button>
+          <button type="submit" class="btn btn-primary" (click)="update()">update</button>
+        </div>
+      </form>
+    </p-dialog>
+    <p-dialog header="Delete" [(visible)]="deleteingdata" [style]="{ width: '35vw'}" [draggable]="true"
+      [resizable]="true">
+
+      <form action="" method="POST"></form>
+      <div class="modal-body">
+        <p>Are you really want to Delete</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="close()">Close</button>
+        <button type="submit" name="dalete" class="btn btn-primary" data-dismiss="modal"
+          (click)="deletedata()">Delete</button>
+        <input name="addid" type="hidden" value="1">
+      </div>
+
+    </p-dialog>
+
+    <p-dialog header="Viwe" [(visible)]="viwedata" [style]="{ width: '50vw'}" [draggable]="true"
+    [resizable]="true">
+    <p-table #dt [value]="partyData.request.body.formdata" [rows]="10" [paginator]="true"
+    [rowsPerPageOptions]="[10,25,50]" dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [globalFilterFields]="[ 'key','value','description','type']" [showCurrentPageReport]="true">
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" placeholder="Search..." (input)="partyService.filterHandler(dt,$event)" />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>S.No.</th>
+        <th>Key</th>
+        <th>Value</th>
+        <th>Description</th>
+        <th>Type</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-formData let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>{{formData.key }}</td>
+        <td>{{formData.value }}</td>
+        <td>{{formData.description }}</td>
+        <td>{{formData.type }}</td>
+  
+  
+      </tr>
+    </ng-template>
+  </p-table>
+  
+    
+  </p-dialog>
+
+
+  </div>
+<p-toast></p-toast>
